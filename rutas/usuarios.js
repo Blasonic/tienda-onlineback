@@ -22,7 +22,7 @@ router.get('/llamar', (req, res) => {
 });
 
 
-router.get('/llamar:id_usuario', (req, res) => {
+router.get('/llamar/:id_usuario', (req, res) => {
     const { id } = req.params;
     const sql = 'SELECT * FROM Usuario WHERE id_usuario = ?';
     pool.query(sql, [id], (err, result) => {

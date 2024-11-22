@@ -22,7 +22,7 @@ router.get('/llamarCarrito', (req, res) => {
 });
 
 
-router.get('/llamarCarrito:id_carrito', (req, res) => {
+router.get('/llamarCarrito/:id_carrito', (req, res) => {
     const { id_carrito } = req.params;
     const sql = 'SELECT * FROM Carrito WHERE id_carrito = ?';
     pool.query(sql, [id_carrito], (err, result) => {

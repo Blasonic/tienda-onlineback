@@ -23,9 +23,9 @@ router.get('/llamarCarrito', (req, res) => {
 
 
 router.get('/llamarCarrito:id_carrito', (req, res) => {
-    const { id } = req.params;
+    const { id_carrito } = req.params;
     const sql = 'SELECT * FROM Carrito WHERE id_carrito = ?';
-    pool.query(sql, [id], (err, result) => {
+    pool.query(sql, [id_carrito], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         if (result.length === 0) return res.status(404).json({ message: 'Carrito no encontrado' });
         res.status(200).json(result[0]);

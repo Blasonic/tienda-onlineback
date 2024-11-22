@@ -8,13 +8,13 @@ router.post('/crearProducto', (req, res) => {
     const sql = 'INSERT INTO Producto (nombre, descripcion, precio, stock) VALUES (?, ?, ?, ?)';
     pool.query(sql, [nombre, descripcion, precio, stock], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ message: 'Usuario creado', id: result.insertId });
+        res.status(201).json({ message: 'Producto creado', id_producto: result.insertId });
     });
 });
 
 
-router.get('/llamar', (req, res) => {
-    const sql = 'SELECT * FROM Usuario';
+router.get('/llamarProducto', (req, res) => {
+    const sql = 'SELECT * FROM Producto';
     pool.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(200).json(results);
@@ -22,34 +22,36 @@ router.get('/llamar', (req, res) => {
 });
 
 
-router.get('/llamar:id_usuario', (req, res) => {
+router.get('/llamar:id_producto', (req, res) => {
     const { id } = req.params;
-    const sql = 'SELECT * FROM Usuario WHERE id_usuario = ?';
+    const sql = 'SELECT * FROM Producto WHERE id_producto = ?';
     pool.query(sql, [id], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (result.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+        if (result.length === 0) return res.status(404).json({ message: 'Producto no encontrado' });
         res.status(200).json(result[0]);
     });
 });
 
-router.put('/actualizar/:id_usuario', (req, res) => {
-    const { id_usuario } = req.params;
-    const { nombre, apellido, correo, telefono } = req.body;
-    const sql = 'UPDATE Usuario SET nombre = ?, apellido = ?, correo = ?, telefono = ? WHERE id_usuario = ?';
-    pool.query(sql, [nombre, apellido, correo, telefono, id_usuario], (err, result) => {
+router.put('/actualizarProducto/:id_producto', (req, res) => {
+    const { id_producto } = req.params;
+    const { nombre, descripcion, precio, stock } = req.body;
+    const sql = 'UPDATE Producto SET nombre = ?, descripcion = ?, precio = ?, stock = ? WHERE id_producto = ?';
+    pool.query(sql, [nombre, descripcion, precio, stock, id_producto], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (result.affectedRows === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
-        res.status(200).json({ message: 'Usuario actualizado' });
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Producto no encontrado' });
+        res.status(200).json({ message: 'Producto actualizado' });
     });
 });
 
 
-router.delete('/borrar/:id_usuario', (req, res) => {
-    const { id_usuario } = req.params;
-    const sql = 'DELETE FROM Usuario WHERE id_usuario = ?';
-    pool.query(sql, [id_usuario], (err, result) => {
+router.delete('/borrarProducto/:id_producto', (req, res) => {
+    const { id_producto } = req.params;
+    const sql = 'DELETE FROM Producto WHERE id_producto = ?';
+    pool.query(sql, [id_producto], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (result.affectedRows === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
-        res.status(200).json({ message: 'Usuario eliminado' });
+        if (result.affectedRows === 0) return res.status(404).json({ message: 'Producto no encontrado' });
+        res.status(200).json({ message: 'Producto eliminado' });
     });
 });
+
+module.exports = router;

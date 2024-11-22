@@ -10,6 +10,7 @@ const rutaPedidos = require('./rutas/pedido');
 const rutaDetallesPedidos = require('./rutas/detalle_pedido');
 const rutaEnvios = require('./rutas/envio');
 const rutaPagos = require('./rutas/pago');
+const rutaResena = require('./rutas/resena_producto');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -26,6 +27,7 @@ app.use('/pedido', rutaPedidos);
 app.use('/detalle_pedido', rutaDetallesPedidos);
 app.use('/envio', rutaEnvios);
 app.use('/pago', rutaPagos);
+app.use('/resena_producto', rutaResena);
 
 
 app.listen(port, () => {

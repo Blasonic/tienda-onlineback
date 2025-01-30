@@ -1,57 +1,84 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../bd');
+const db = require('../bd'); 
+
+router.get('/', async (req, res) => {
+    try {
+        const [productos] = await db.query('SELECT * FROM zapatillas');
+        res.json(productos);
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
 
 
-router.post('/crearProducto', (req, res) => {
-    const { nombre, descripcion, precio, stock} = req.body;
-    const sql = 'INSERT INTO Producto (nombre, descripcion, precio, stock) VALUES (?, ?, ?, ?)';
-    pool.query(sql, [nombre, descripcion, precio, stock], (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
+router.post('/crearProducto', async (req, res) => {
+    const { src, alt, label, price } = req.body;
+    try {
+        const sql = 'INSERT INTO zapatillas (src, alt, label, price) VALUES (?, ?, ?, ?)';
+        const [result] = await db.query(sql, [src, alt, label, price]);
         res.status(201).json({ message: 'Producto creado', id_producto: result.insertId });
-    });
+    } catch (error) {
+        console.error('Error al crear producto:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
-
-router.get('/llamarProducto', (req, res) => {
-    const sql = 'SELECT * FROM Producto';
-    pool.query(sql, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
+router.get('/llamarProducto', async (req, res) => {
+    try {
+        const [results] = await db.query('SELECT * FROM zapatillas');
         res.status(200).json(results);
-    });
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
 
-router.get('/llamarProducto/:id_producto', (req, res) => {
-    const { id_producto } = req.params;
-    const sql = 'SELECT * FROM Producto WHERE id_producto = ?';
-    pool.query(sql, [id_producto], (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (result.length === 0) return res.status(404).json({ message: 'Producto no encontrado' });
+router.get('/llamarProducto/:id_producto', async (req, res) => {
+    const { id } = req.params;  
+    console.log(`Buscando producto con id: ${id}`);  
+    try {
+        const [result] = await db.query('SELECT * FROM zapatillas WHERE id = ?', [parseInt(id)]);
+        
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        
         res.status(200).json(result[0]);
-    });
+    } catch (error) {
+        console.error('Error al obtener producto:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
-router.put('/actualizarProducto/:id_producto', (req, res) => {
-    const { id_producto } = req.params;
-    const { nombre, descripcion, precio, stock } = req.body;
-    const sql = 'UPDATE Producto SET nombre = ?, descripcion = ?, precio = ?, stock = ? WHERE id_producto = ?';
-    pool.query(sql, [nombre, descripcion, precio, stock, id_producto], (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
+
+router.put('/actualizarProducto/:id_producto', async (req, res) => {
+    const { id } = req.params;
+    const { src, alt, label, price } = req.body;
+    try {
+        const sql = 'UPDATE zapatillas SET src = ?, alt = ?, label = ?, price = ? WHERE id = ?';
+        const [result] = await db.query(sql, [src, alt, label, price, id]);
         if (result.affectedRows === 0) return res.status(404).json({ message: 'Producto no encontrado' });
         res.status(200).json({ message: 'Producto actualizado' });
-    });
+    } catch (error) {
+        console.error('Error al actualizar producto:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
 
-router.delete('/borrarProducto/:id_producto', (req, res) => {
-    const { id_producto } = req.params;
-    const sql = 'DELETE FROM Producto WHERE id_producto = ?';
-    pool.query(sql, [id_producto], (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
+router.delete('/borrarProducto/:id_producto', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await db.query('DELETE FROM zapatillas WHERE id = ?', [id]);
         if (result.affectedRows === 0) return res.status(404).json({ message: 'Producto no encontrado' });
         res.status(200).json({ message: 'Producto eliminado' });
-    });
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 });
 
 module.exports = router;

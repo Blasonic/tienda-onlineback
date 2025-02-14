@@ -39,4 +39,3 @@ app.use('/accesorios', rutaAccesorios);
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-

@@ -15,6 +15,7 @@ const rutaOfertas = require('./rutas/ofertas.js');
 const rutaHombresZapatillas = require('./rutas/hombres_zapatillas.js');
 const rutaMujeresZapatillas = require('./rutas/mujeres_zapatillas.js');
 const rutaAccesorios = require('./rutas/accesorios.js');
+const rutaColaboraciones = require('./rutas/colaboraciones.js');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -34,6 +35,7 @@ app.use('/ofertas', rutaOfertas);
 app.use('/hombres_zapatillas', rutaHombresZapatillas);
 app.use('/mujeres_zapatillas', rutaMujeresZapatillas);
 app.use('/accesorios', rutaAccesorios);
+app.use('/colaboraciones', rutaColaboraciones);
 
 
 app.listen(port, () => {

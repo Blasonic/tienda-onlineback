@@ -30,6 +30,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
 router.get('/verificacion/:verification', async (req, res) => {
     try {
         const { verification } = req.params;
@@ -47,3 +48,4 @@ router.get('/verificacion/:verification', async (req, res) => {
 });
 
 module.exports = router;
+

@@ -26,4 +26,4 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
-module.exports = router; // 
+module.exports = router; 

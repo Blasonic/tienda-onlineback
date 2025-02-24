@@ -1,12 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../bd');  
+const db = require('../bd'); 
+
+
 router.get('/', async (req, res) => {
     try {
-        const [mujeres] = await db.query('SELECT * FROM zapatillas_mujer');
-        res.json(mujeres);
+        const [productos] = await db.query('SELECT * FROM zapatillas_mujer');
+        res.json(productos);
     } catch (error) {
-        console.error('Error al obtener zapatillas de mujeres:', error);
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+});
+
+
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [producto] = await db.query('SELECT * FROM zapatillas_mujer WHERE id = ?', [id]);
+
+        if (producto.length === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        res.json(producto[0]);
+    } catch (error) {
+        console.error('Error al obtener el producto:', error);
         res.status(500).json({ error: 'Error en el servidor' });
     }
 });
